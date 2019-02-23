@@ -20,7 +20,7 @@ extension Int {
   }
 }
 
-struct Board: CustomPlaygroundDisplayConvertible {
+struct Board: CustomStringConvertible {
   let board: [[Int]]
   private let maximumDigits: Int
 
@@ -46,7 +46,7 @@ struct Board: CustomPlaygroundDisplayConvertible {
     maximumDigits = maximumNumber.digits
   }
 
-  var playgroundDescription: Any {
+  var description: String {
     var res = ""
     for column in 0..<board.count {
       for row in 0..<board[column].count {
@@ -79,4 +79,4 @@ struct Board: CustomPlaygroundDisplayConvertible {
 }
 
 let five = Board(rows: 4)
-print(five.playgroundDescription)
+print(five)
