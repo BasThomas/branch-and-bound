@@ -29,15 +29,15 @@ struct Board: CustomStringConvertible {
     let maximumNumber = NSDecimalNumber(decimal: pow(Decimal(rows), 2)).intValue
     let randomNumber = Int.random(in: 1...maximumNumber)
     var _board: [[Int]] = []
-    for column in 0..<rows {
+    for row in 0..<rows {
       _board.append([])
-      for row in 0..<rows {
-        let number = (column * rows) + row + 1
+      for column in 0..<rows {
+        let number = (row * rows) + column + 1
         if number == randomNumber {
           // append one random "0" tile; representing the empty tile
-          _board[column].append(0)
+          _board[row].append(0)
         } else {
-          _board[column].append(number)
+          _board[row].append(number)
         }
       }
     }
