@@ -21,6 +21,15 @@ extension Int {
 }
 
 struct Board: CustomStringConvertible {
+  struct Position: CustomStringConvertible {
+    let row: Int
+    let column: Int
+
+    var description: String {
+      return "row: \(row), column: \(column)"
+    }
+  }
+
   let board: [[Int]]
   private let maximumDigits: Int
 
@@ -46,12 +55,12 @@ struct Board: CustomStringConvertible {
     maximumDigits = maximumNumber.digits
   }
 
-  var emptyTile: (column: Int, row: Int) {
+  var emptyTile: Position {
     let zeroTileIndex = board
       .flatMap { $0 }.firstIndex(of: 0)!
-    let column = zeroTileIndex / board.count
     let row = zeroTileIndex % board.count
-    return (column, row)
+    let column = zeroTileIndex / board.count
+    return .init(row: row, column: column)
   }
 
   var description: String {
