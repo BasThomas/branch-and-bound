@@ -21,16 +21,25 @@ extension Int {
 }
 
 struct Board: CustomStringConvertible {
-  struct Position: CustomStringConvertible {
+  struct Position: CustomStringConvertible, Equatable {
     let row: Int
     let column: Int
+
+    func isAdjacent(to position: Position, in board: Board) -> Bool {
+      return board.adjacentPositions(for: self)
+        .filter { $0 == position }
+        .isEmpty == false
+
+      // return board.adjacentPosition(for: self).allSatisfy { $0 == position } == false
+    }
 
     var description: String {
       return "row: \(row), column: \(column)"
     }
   }
 
-  let board: [[Int]]
+  let initialBoard: [[Int]]
+  var currentBoard: [[Int]]
   private let maximumDigits: Int
 
   init(rows: Int) {
@@ -57,26 +66,48 @@ struct Board: CustomStringConvertible {
       }
     }
 
-    board = _board
+    initialBoard = _board
+    currentBoard = _board
     maximumDigits = maximumNumber.digits
   }
 
   var emptyTile: Position {
-    let zeroTileIndex = board
+    let zeroTileIndex = currentBoard
       .flatMap { $0 }.firstIndex(of: 0)!
-    let row = zeroTileIndex % board.count
-    let column = zeroTileIndex / board.count
+    let row = zeroTileIndex % initialBoard.count
+    let column = zeroTileIndex / initialBoard.count
     return .init(row: row, column: column)
+  }
+
+  mutating func swap(position: Position, with newPosition: Position) {
+    // see https://github.com/BasThomas/Fif/blob/a0fe046b08f0153696ab52237ae93607fdc95638/Shared/UICollectionView%2BExtension.swift#L41
+    // mutate currentBoard here
+  }
+
+  mutating func shuffle() {
+    // see https://github.com/BasThomas/Fif/blob/a0fe046b08f0153696ab52237ae93607fdc95638/Fif-tvOS/GameViewController.swift#L60
+  }
+
+  private func adjacentPositions(for position: Position) -> [Position] {
+    // see https://github.com/BasThomas/Fif/blob/a0fe046b08f0153696ab52237ae93607fdc95638/Shared/UICollectionView%2BExtension.swift#L13
+    var adjacentPositions: [Position] = []
+    adjacentPositions.append(.init(row: 0, column: 0))
+    adjacentPositions.append(.init(row: 0, column: 0))
+    // FIXME: all adjacent positions must be unique
+    precondition(adjacentPositions.count <= 4, "Can't have more than four adjacent positions")
+    precondition(adjacentPositions.count >= 2, "Must have at least two adjacent positions")
+
+    return adjacentPositions
   }
 
   var description: String {
     var res = ""
-    for column in 0..<board.count {
-      for row in 0..<board[column].count {
+    for column in 0..<currentBoard.count {
+      for row in 0..<currentBoard[column].count {
         // prepend each row with a pipe, so all numbers are "encased" in them,
         // ie. |1|2|3|.
         if row == 0 { res.append("|") }
-        let number = board[column][row]
+        let number = currentBoard[column][row]
         let paddedNumber = number.padded(
           with: " ",
           maximumDigits: maximumDigits
