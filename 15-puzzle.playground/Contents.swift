@@ -46,6 +46,14 @@ struct Board: CustomStringConvertible {
     maximumDigits = maximumNumber.digits
   }
 
+  var emptyTile: (column: Int, row: Int) {
+    let zeroTileIndex = board
+      .flatMap { $0 }.firstIndex(of: 0)!
+    let column = zeroTileIndex / board.count
+    let row = zeroTileIndex % board.count
+    return (column, row)
+  }
+
   var description: String {
     var res = ""
     for column in 0..<board.count {
@@ -80,3 +88,4 @@ struct Board: CustomStringConvertible {
 
 let five = Board(rows: 4)
 print(five)
+five.emptyTile
