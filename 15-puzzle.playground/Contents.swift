@@ -38,6 +38,7 @@ struct Board: CustomStringConvertible {
     let maximumNumber = NSDecimalNumber(decimal: pow(Decimal(rows), 2)).intValue
     let randomNumber = Int.random(in: 1...maximumNumber)
     var _board: [[Int]] = []
+    var emptyTileAdded = false
     for row in 0..<rows {
       _board.append([])
       for column in 0..<rows {
@@ -45,8 +46,13 @@ struct Board: CustomStringConvertible {
         if number == randomNumber {
           // append one random "0" tile; representing the empty tile
           _board[row].append(0)
-        } else {
+          emptyTileAdded = true
+        } else if emptyTileAdded == false {
           _board[row].append(number)
+        } else if emptyTileAdded == true {
+          _board[row].append(number - 1)
+        } else {
+          fatalError("Invalid state for \(Position(row: row, column: column))")
         }
       }
     }
