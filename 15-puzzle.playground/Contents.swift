@@ -20,6 +20,49 @@ extension Int {
   }
 }
 
+struct Solution<Problem>: Sequence, IteratorProtocol {
+  struct Step<T> {
+    let step: T
+  }
+
+  let steps: [Step<Problem>]
+
+  var input: Step<Problem> {
+    return steps.first! // safe, as steps will guaranteed to be larger than 0.
+  }
+
+  var output: Step<Problem> {
+    return steps.last! // safe, as steps will guaranteed to be larger than 0.
+  }
+
+  init(steps: [Step<Problem>]) {
+    precondition(steps.count > 0, "Solution must contain at least one step.")
+    self.steps = steps
+  }
+
+  init(steps: Step<Problem>...) {
+    self.init(steps: steps)
+  }
+
+  private var _index: Int? = nil
+  mutating func next() -> Step<Problem>? {
+    // we're counting up (looping though the steps array), so begin at _index 0.
+    if _index == nil { _index = 0 }
+    // shadow _index so we do not have to deal with its optionality
+    // this is also why the "other" index is underscored.
+    var index = _index!
+    if index < steps.count {
+      // always move the _index forward after we can return a step
+      defer { _index! += 1 }
+      return steps[index]
+    } else {
+      // when we're done, reset the _index to nil.
+      _index = nil
+      return nil
+    }
+  }
+}
+
 struct Board: CustomStringConvertible {
   struct Position: CustomStringConvertible, Equatable {
     let row: Int
@@ -81,7 +124,7 @@ struct Board: CustomStringConvertible {
 
   mutating func swap(position: Position, with newPosition: Position) {
     // see https://github.com/BasThomas/Fif/blob/a0fe046b08f0153696ab52237ae93607fdc95638/Shared/UICollectionView%2BExtension.swift#L41
-    // mutate currentBoard here
+    #warning("mutate currentBoard here")
   }
 
   mutating func shuffle() {
@@ -93,11 +136,22 @@ struct Board: CustomStringConvertible {
     var adjacentPositions: [Position] = []
     adjacentPositions.append(.init(row: 0, column: 0))
     adjacentPositions.append(.init(row: 0, column: 0))
-    // FIXME: all adjacent positions must be unique
+    #warning("all adjacent positions must be unique")
     precondition(adjacentPositions.count <= 4, "Can't have more than four adjacent positions")
     precondition(adjacentPositions.count >= 2, "Must have at least two adjacent positions")
 
     return adjacentPositions
+  }
+
+  @discardableResult
+  func solve() -> Solution<Board> {
+    #warning("implement")
+    return .init()
+  }
+
+  var isCompleted: Bool {
+    #warning("implement")
+    return false
   }
 
   var description: String {
@@ -162,7 +216,7 @@ struct Vector<T> {
   }
 }
 
-//extension Vector: Equatable where T == Equatable { }
+extension Vector: Equatable where T: Equatable {}
 
 let threeVector = Vector<Int>.init(size: 3, initialValue: 0)
 threeVector.matrix
