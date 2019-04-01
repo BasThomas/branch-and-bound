@@ -81,30 +81,34 @@ struct Board: CustomStringConvertible {
     }
   }
 
-  let initialBoard: [[Int]]
-  var currentBoard: [[Int]]
+  enum Tile: Equatable {
+    case empty
+    case number(Int)
+
+    var intValue: Int {
+      switch self {
+      case .empty: return -1
+      case .number(let number): return number
+      }
+    }
+  }
+
+  let initialBoard: [[Tile]]
+  var currentBoard: [[Tile]]
   private let maximumDigits: Int
 
   init(rows: Int) {
     precondition(rows > 1, "A puzzle should at least be 2x2")
     let maximumNumber = NSDecimalNumber(decimal: pow(Decimal(rows), 2)).intValue
-    let randomNumber = Int.random(in: 1...maximumNumber)
-    var _board: [[Int]] = []
-    var emptyTileAdded = false
+    var _board: [[Tile]] = []
     for row in 0..<rows {
       _board.append([])
       for column in 0..<rows {
         let number = (row * rows) + column + 1
-        if number == randomNumber {
-          // append one random "0" tile; representing the empty tile
-          _board[row].append(0)
-          emptyTileAdded = true
-        } else if emptyTileAdded == false {
-          _board[row].append(number)
-        } else if emptyTileAdded == true {
-          _board[row].append(number - 1)
+        if row == rows - 1 && column == rows - 1 {
+            _board[row].append(.empty)
         } else {
-          fatalError("Invalid state for \(Position(row: row, column: column))")
+            _board[row].append(.number(number))
         }
       }
     }
@@ -116,7 +120,7 @@ struct Board: CustomStringConvertible {
 
   var emptyTile: Position {
     let zeroTileIndex = currentBoard
-      .flatMap { $0 }.firstIndex(of: 0)!
+      .flatMap { $0 }.firstIndex(of: .empty)!
     let row = zeroTileIndex % initialBoard.count
     let column = zeroTileIndex / initialBoard.count
     return .init(row: row, column: column)
@@ -161,19 +165,17 @@ struct Board: CustomStringConvertible {
         // prepend each row with a pipe, so all numbers are "encased" in them,
         // ie. |1|2|3|.
         if row == 0 { res.append("|") }
-        let number = currentBoard[column][row]
-        let paddedNumber = number.padded(
+        let tile = currentBoard[column][row]
+        let paddedNumber = tile.intValue.padded(
           with: " ",
           maximumDigits: maximumDigits
         )
 
         let formattedPaddedNumber: String
-        if number == 0 {
-          // replace the "0" tile with a space, not just any that contain a 0,
-          // like 10 or 105.
+        if tile == .empty {
           formattedPaddedNumber = paddedNumber.replacingOccurrences(
-            of: "0",
-            with: " "
+            of: "-1",
+            with: "  "
           )
         } else {
           formattedPaddedNumber = paddedNumber
