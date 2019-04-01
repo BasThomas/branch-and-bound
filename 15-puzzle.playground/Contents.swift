@@ -191,34 +191,3 @@ struct Board: CustomStringConvertible {
 let five = Board(rows: 4)
 print(five)
 five.emptyTile
-
-struct Vector<T> {
-  let size: Int
-  let initialValue: T
-
-  struct Position: Equatable {
-    let row: Int
-    let column: Int
-  }
-
-  typealias Matrix = [Position]
-
-  let matrix: Matrix
-
-  init(size: Int, initialValue: T) {
-    self.size = size
-    self.initialValue = initialValue
-    var _matrix: Matrix = []
-    for row in 0..<size {
-      for column in 0..<size {
-        _matrix.append(.init(row: row, column: column))
-      }
-    }
-    self.matrix = _matrix
-  }
-}
-
-extension Vector: Equatable where T: Equatable {}
-
-let threeVector = Vector<Int>.init(size: 3, initialValue: 0)
-threeVector.matrix
