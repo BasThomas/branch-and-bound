@@ -10,9 +10,6 @@ struct Board: CustomStringConvertible {
         .filter { $0 == position }
         .isEmpty == false
 
-      print(self)
-      print(board.adjacentPositions(for: self))
-
       return x
     }
 
@@ -76,7 +73,7 @@ struct Board: CustomStringConvertible {
   private subscript(
     position: Position
   ) -> Tile {
-      return currentBoard[position.row][position.column]
+      return currentBoard[position.column][position.row]
   }
 
   private func tile(
@@ -92,10 +89,9 @@ struct Board: CustomStringConvertible {
     let aPosition = position(for: aTile)
     let bPosition = position(for: bTile)
     guard aPosition.isAdjacent(to: bPosition, in: self) else { return false }
-    currentBoard[aPosition.row][aPosition.column] = bTile
-    currentBoard[bPosition.row][bPosition.column] = aTile
+    currentBoard[aPosition.column][aPosition.row] = bTile
+    currentBoard[bPosition.column][bPosition.row] = aTile
 
-    print("hi")
     return true
   }
 
@@ -103,8 +99,8 @@ struct Board: CustomStringConvertible {
   mutating func move(
     tile: Tile
   ) -> Bool {
-    guard tile != .empty else { print("do not move empty");return false }
-    guard position(for: tile).isAdjacent(to: position(for: .empty), in: self) else { print("not adj"); return false }
+    guard tile != .empty else { return false }
+    guard position(for: tile).isAdjacent(to: position(for: .empty), in: self) else { return false }
     return swap(tile, with: .empty)
   }
 
@@ -131,7 +127,7 @@ struct Board: CustomStringConvertible {
       fallthrough // left
       case Position(row: position.row + 1, column: position.column):
       fallthrough // below
-      case Position(row: position.row - 1, column: position.column):
+      case Position(row: position.row, column: position.column + 1):
         precondition(adjacentPositions.contains(loopingPosition) == false)
         adjacentPositions.append(loopingPosition) // right
       default:
