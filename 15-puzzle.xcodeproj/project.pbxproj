@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D87FB212296DA7200DB7D04 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D87FB202296DA7200DB7D04 /* Tests.swift */; };
+		5D87FB262296E04100DB7D04 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9913FC225350FE00436008 /* Board.swift */; };
+		5D87FB272296E04500DB7D04 /* Solution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9913FA225350E000436008 /* Solution.swift */; };
+		5D87FB282296E04800DB7D04 /* Int+Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9913F8225350BF00436008 /* Int+Padding.swift */; };
 		5D9913F22253505700436008 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9913F12253505700436008 /* main.swift */; };
 		5D9913F9225350BF00436008 /* Int+Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9913F8225350BF00436008 /* Int+Padding.swift */; };
 		5D9913FB225350E000436008 /* Solution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9913FA225350E000436008 /* Solution.swift */; };
@@ -26,14 +30,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5D87FB1E2296DA7200DB7D04 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D87FB202296DA7200DB7D04 /* Tests.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; tabWidth = 2; };
+		5D87FB222296DA7200DB7D04 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D9913EE2253505700436008 /* 15-puzzle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "15-puzzle"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D9913F12253505700436008 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		5D9913F8225350BF00436008 /* Int+Padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Padding.swift"; sourceTree = "<group>"; };
-		5D9913FA225350E000436008 /* Solution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solution.swift; sourceTree = "<group>"; };
+		5D9913FA225350E000436008 /* Solution.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Solution.swift; sourceTree = "<group>"; tabWidth = 2; };
 		5D9913FC225350FE00436008 /* Board.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; tabWidth = 2; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5D87FB1B2296DA7200DB7D04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D9913EB2253505700436008 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -44,10 +58,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D87FB1F2296DA7200DB7D04 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				5D87FB202296DA7200DB7D04 /* Tests.swift */,
+				5D87FB222296DA7200DB7D04 /* Info.plist */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		5D9913E52253505700436008 = {
 			isa = PBXGroup;
 			children = (
 				5D9913F02253505700436008 /* 15-puzzle */,
+				5D87FB1F2296DA7200DB7D04 /* Tests */,
 				5D9913EF2253505700436008 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				5D9913EE2253505700436008 /* 15-puzzle */,
+				5D87FB1E2296DA7200DB7D04 /* Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +107,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		5D87FB1D2296DA7200DB7D04 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D87FB252296DA7200DB7D04 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				5D87FB1A2296DA7200DB7D04 /* Sources */,
+				5D87FB1B2296DA7200DB7D04 /* Frameworks */,
+				5D87FB1C2296DA7200DB7D04 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 5D87FB1E2296DA7200DB7D04 /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		5D9913ED2253505700436008 /* 15-puzzle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5D9913F52253505700436008 /* Build configuration list for PBXNativeTarget "15-puzzle" */;
@@ -109,6 +151,9 @@
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Bas Thomas Broek";
 				TargetAttributes = {
+					5D87FB1D2296DA7200DB7D04 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
 					5D9913ED2253505700436008 = {
 						CreatedOnToolsVersion = 10.2;
 					};
@@ -127,11 +172,33 @@
 			projectRoot = "";
 			targets = (
 				5D9913ED2253505700436008 /* 15-puzzle */,
+				5D87FB1D2296DA7200DB7D04 /* Tests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		5D87FB1C2296DA7200DB7D04 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		5D87FB1A2296DA7200DB7D04 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D87FB262296E04100DB7D04 /* Board.swift in Sources */,
+				5D87FB282296E04800DB7D04 /* Int+Padding.swift in Sources */,
+				5D87FB212296DA7200DB7D04 /* Tests.swift in Sources */,
+				5D87FB272296E04500DB7D04 /* Solution.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5D9913EA2253505700436008 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -146,6 +213,40 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		5D87FB232296DA7200DB7D04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = nl.basbroek.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		5D87FB242296DA7200DB7D04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = nl.basbroek.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		5D9913F32253505700436008 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -282,6 +383,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		5D87FB252296DA7200DB7D04 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D87FB232296DA7200DB7D04 /* Debug */,
+				5D87FB242296DA7200DB7D04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		5D9913E92253505700436008 /* Build configuration list for PBXProject "15-puzzle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -18,13 +18,23 @@ struct Board: CustomStringConvertible {
     }
   }
 
-  enum Tile: Equatable {
+  enum Tile: Equatable, ExpressibleByIntegerLiteral {
     case empty
     case number(Int)
 
+    private static let emptyValue = -1
+
+    init(integerLiteral value: Int) {
+      if value == Tile.emptyValue {
+        self = .empty
+      } else {
+        self = .number(value)
+      }
+    }
+
     var intValue: Int {
       switch self {
-      case .empty: return -1
+      case .empty: return Tile.emptyValue
       case .number(let number): return number
       }
     }
@@ -55,6 +65,18 @@ struct Board: CustomStringConvertible {
     currentBoard = _board
     maximumDigits = maximumNumber.digits
     self.rows = rows
+  }
+
+  private var _previouNextTile: Tile = .empty
+  mutating func next() {
+    let currentBoard = self.currentBoard
+    let adjacentToEmpty = adjacentPositions(for: position(for: .empty))
+    print("##", adjacentToEmpty)
+
+    let boardOptions = adjacentToEmpty.map { position -> [[Tile]] in
+      move(tile: tile(at: position))
+      return currentBoard
+    }
   }
 
   private func position(
@@ -116,18 +138,18 @@ struct Board: CustomStringConvertible {
     return swap(tile, with: .empty)
   }
 
-  private var _previouslyMovedTile: Tile = .empty
+  private var _previouslyShuffledTile: Tile = .empty
   mutating func shuffle(moves: Int = 50) {
     for _ in 1...moves {
       let adjacentToEmpty = adjacentPositions(for: position(for: .empty))
       precondition(adjacentToEmpty.count >= 2, "Should always have at least two adjacent empty positions")
       // Remove the previously moved tile, so we do not move a tile
       // back-and-forth. That would be rather pointless.
-      let adjacentWithoutPrevious = adjacentToEmpty.filter { $0 != position(for: _previouslyMovedTile) }
+      let adjacentWithoutPrevious = adjacentToEmpty.filter { $0 != position(for: _previouslyShuffledTile) }
       let randomAdjacent = adjacentWithoutPrevious.randomElement()!
       let randomTile = tile(at: randomAdjacent)
       move(tile: randomTile)
-      _previouslyMovedTile = randomTile
+      _previouslyShuffledTile = randomTile
     }
   }
 
@@ -194,7 +216,7 @@ struct Board: CustomStringConvertible {
   }
 
   var isSolved: Bool {
-    return validPositions == rows * 2
+    return validPositions == rows * rows
   }
 
   var description: String {
