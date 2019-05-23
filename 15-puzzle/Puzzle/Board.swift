@@ -33,6 +33,7 @@ struct Board: CustomStringConvertible {
   let initialBoard: [[Tile]]
   var currentBoard: [[Tile]]
   private let maximumDigits: Int
+  private let rows: Int
 
   init(rows: Int) {
     precondition(rows > 1, "A puzzle should at least be 2x2")
@@ -53,11 +54,12 @@ struct Board: CustomStringConvertible {
     initialBoard = _board
     currentBoard = _board
     maximumDigits = maximumNumber.digits
+    self.rows = rows
   }
 
   private func position(
     for tile: Tile
-    ) -> Position {
+  ) -> Position {
     let tileIndex = currentBoard
       .flatMap { $0 }
       .firstIndex(of: tile)!
@@ -76,12 +78,22 @@ struct Board: CustomStringConvertible {
       return currentBoard[position.column][position.row]
   }
 
+  /// Returns the tile at the specified position.
+  ///
+  /// - Parameter position: The position to return the tile of.
+  /// - Returns: The tile at the specified position.
   private func tile(
     at position: Position
-    ) -> Tile {
+  ) -> Tile {
     return self[position]
   }
 
+  /// Swaps two tiles iff they are adjacent.
+  ///
+  /// - Parameters:
+  ///   - aTile: The first tile to swap.
+  ///   - bTile: The second tile to swap.
+  /// - Returns: If swapping succeeded, returns `true`, otherwise `false`.
   private mutating func swap(
     _ aTile: Tile,
     with bTile: Tile
@@ -104,8 +116,19 @@ struct Board: CustomStringConvertible {
     return swap(tile, with: .empty)
   }
 
-  mutating func shuffle() {
-    // see https://github.com/BasThomas/Fif/blob/a0fe046b08f0153696ab52237ae93607fdc95638/Fif-tvOS/GameViewController.swift#L60
+  private var _previouslyMovedTile: Tile = .empty
+  mutating func shuffle(moves: Int = 50) {
+    for _ in 1...moves {
+      let adjacentToEmpty = adjacentPositions(for: position(for: .empty))
+      precondition(adjacentToEmpty.count >= 2, "Should always have at least two adjacent empty positions")
+      // Remove the previously moved tile, so we do not move a tile
+      // back-and-forth. That would be rather pointless.
+      let adjacentWithoutPrevious = adjacentToEmpty.filter { $0 != position(for: _previouslyMovedTile) }
+      let randomAdjacent = adjacentWithoutPrevious.randomElement()!
+      let randomTile = tile(at: randomAdjacent)
+      move(tile: randomTile)
+      _previouslyMovedTile = randomTile
+    }
   }
 
   private func adjacentPositions(
@@ -153,9 +176,25 @@ struct Board: CustomStringConvertible {
     return .init()
   }
 
-  var isCompleted: Bool {
-    #warning("implement")
-    return false
+  private var validPositions: Int {
+    let currentLayout = currentBoard
+      .flatMap { $0 }
+      .map { $0.intValue }
+    return currentLayout
+      .enumerated()
+      .filter {
+        // While not ideal, we check for the last element and compare that to
+        // minus one, the `intValue` for the `.empty` Tile.
+        if $0.offset == currentLayout.endIndex - 1 {
+          return $0.element == -1
+        } else {
+          return ($0.offset + 1) == $0.element
+        }
+      }.count
+  }
+
+  var isSolved: Bool {
+    return validPositions == rows * 2
   }
 
   var description: String {
