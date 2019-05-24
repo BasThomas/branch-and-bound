@@ -5,6 +5,10 @@ private extension Board {
     self.init(rows: tiles.count)
     currentBoard = tiles
   }
+
+  static func solved(rows: Int) -> Board {
+    return .init(rows: rows)
+  }
 }
 
 class Tests: XCTestCase {

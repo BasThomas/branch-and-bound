@@ -7,10 +7,10 @@ extension Int {
     return String(self).count
   }
 
-  /// Creates a `String` with the integer padded, if needed.
+  /// Creates a `String` with the integer padded from the left, if needed.
   ///
   /// ```
-  /// 1.padded(with: "_", maximumDigits: 5) // "1____"
+  /// 1.padded(with: "_", maximumDigits: 5) // "____1"
   /// 123.padded(with: "_", maximumDigits: 2) // "123"
   /// ```
   ///

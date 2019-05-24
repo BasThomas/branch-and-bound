@@ -45,7 +45,12 @@ struct Board: CustomStringConvertible {
   private let maximumDigits: Int
   private let rows: Int
 
-  init(rows: Int) {
+  /// Initializes a new board in its solved state.
+  ///
+  /// - Parameter rows: the amount of rows for the board.
+  init(
+    rows: Int
+  ) {
     precondition(rows > 1, "A puzzle should at least be 2x2")
     let maximumNumber = NSDecimalNumber(decimal: pow(Decimal(rows), 2)).intValue
     var _board: [[Tile]] = []
@@ -65,15 +70,6 @@ struct Board: CustomStringConvertible {
     currentBoard = _board
     maximumDigits = maximumNumber.digits
     self.rows = rows
-  }
-
-
-  /// A board in its initial state.
-  ///
-  /// - Parameter rows: the amount of rows the board contains.
-  /// - Returns: a solved board; a board in its initial state.
-  static func solved(rows: Int) -> Board {
-    return .init(rows: rows)
   }
 
   private var _previousNextTile: Tile = .empty
@@ -103,6 +99,10 @@ struct Board: CustomStringConvertible {
     _previousNextTile = bestOption.moved
   }
 
+  /// Returns the position of the given tile from the `currentBoard`.
+  ///
+  /// - Parameter tile: the tile to return the position of.
+  /// - Returns: the position of the specified tile.
   private func position(
     for tile: Tile
   ) -> Position {
@@ -114,32 +114,27 @@ struct Board: CustomStringConvertible {
     return .init(row: row, column: column)
   }
 
+  /// Returns the position of the empty tile.
   private var emptyTile: Position {
     return position(for: .empty)
   }
 
-  private subscript(
-    position: Position
-  ) -> Tile {
-      return currentBoard[position.column][position.row]
-  }
-
   /// Returns the tile at the specified position.
   ///
-  /// - Parameter position: The position to return the tile of.
-  /// - Returns: The tile at the specified position.
+  /// - Parameter position: the position to return the tile of.
+  /// - Returns: the tile at the specified position.
   private func tile(
     at position: Position
   ) -> Tile {
-    return self[position]
+    return currentBoard[position.column][position.row]
   }
 
   /// Swaps two tiles iff they are adjacent.
   ///
   /// - Parameters:
-  ///   - aTile: The first tile to swap.
-  ///   - bTile: The second tile to swap.
-  /// - Returns: If swapping succeeded, returns `true`, otherwise `false`.
+  ///   - aTile: the first tile to swap.
+  ///   - bTile: the second tile to swap.
+  /// - Returns: if swapping succeeded, returns `true`, otherwise `false`.
   private mutating func swap(
     _ aTile: Tile,
     with bTile: Tile
@@ -153,8 +148,13 @@ struct Board: CustomStringConvertible {
     return true
   }
 
-  @discardableResult
-  mutating func move(
+  /// Moves the given tile iff it is a valid move.
+  /// It does not support moving the empty tile.
+  ///
+  /// - Parameter tile: the tile to move.
+  /// - Returns: `true` iff the move was valid, and thus performed. Will not
+  /// move any tiles if the move is not valid.
+  @discardableResult mutating func move(
     tile: Tile
   ) -> Bool {
     guard tile != .empty else { return false }
@@ -163,6 +163,10 @@ struct Board: CustomStringConvertible {
   }
 
   private var _previouslyShuffledTile: Tile = .empty
+  /// Shuffles the board's `currentBoard`.
+  ///
+  /// - Parameter moves: the amount of moves to make. Defaults to 50.
+  /// The shuffling will never undo a previous move.
   mutating func shuffle(moves: Int = 50) {
     for _ in 1...moves {
       let adjacentToEmpty = adjacentPositions(for: position(for: .empty))
@@ -177,6 +181,10 @@ struct Board: CustomStringConvertible {
     }
   }
 
+  /// Calculates positions adjacent to the given position.
+  ///
+  /// - Parameter position: the position to check adjacent positions of.
+  /// - Returns: the positions that are adjacent to the given position.
   private func adjacentPositions(
     for position: Position
   ) -> [Position] {
@@ -216,8 +224,10 @@ struct Board: CustomStringConvertible {
     return adjacentPositions
   }
 
-  @discardableResult
-  mutating func solve() -> Solution<Board> {
+  /// Solves the board's `currentBoard`.
+  ///
+  /// - Returns: a `Solution` containing the steps necessary to solve the board.
+  @discardableResult mutating func solve() -> Solution<Board> {
     var boards: [Board] = []
     repeat {
       next()
@@ -226,6 +236,7 @@ struct Board: CustomStringConvertible {
     return Solution(steps: boards.map(Solution.Step.init))
   }
 
+  /// Returns the amount of valid positions of the board's `currentBoard`.
   private var validPositions: Int {
     let currentLayout = currentBoard
       .flatMap { $0 }
@@ -243,10 +254,20 @@ struct Board: CustomStringConvertible {
       }.count
   }
 
+  /// Returns `true` iff all tiles are in their valid positions.
+  /// Evaluates the state for `currentBoard`.
   var isSolved: Bool {
     return validPositions == rows * rows
   }
 
+  /// Returns a `print`-friendly, padded description of the `currentBoard`.
+  ///
+  /// ```
+  /// | 1| 2| 3| 4|
+  /// | 5| 6| 7| 8|
+  /// | 9|10|11|  |
+  /// |13|14|15|12|
+  /// ```
   var description: String {
     var res = ""
     for column in 0..<currentBoard.count {
