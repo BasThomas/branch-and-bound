@@ -1,6 +1,6 @@
 import Foundation
 
-struct Solution<Problem>: Sequence, IteratorProtocol {
+struct Solution<Problem>: Collection {
   struct Step<T> {
     let step: T
   }
@@ -24,21 +24,19 @@ struct Solution<Problem>: Sequence, IteratorProtocol {
     self.init(steps: steps)
   }
 
-  private var _index: Int? = nil
-  mutating func next() -> Step<Problem>? {
-    // we're counting up (looping though the steps array), so begin at _index 0.
-    if _index == nil { _index = 0 }
-    // shadow _index so we do not have to deal with its optionality
-    // this is also why the "other" index is underscored.
-    var index = _index!
-    if index < steps.count {
-      // always move the _index forward after we can return a step
-      defer { _index! += 1 }
-      return steps[index]
-    } else {
-      // when we're done, reset the _index to nil.
-      _index = nil
-      return nil
-    }
+  var startIndex: Int {
+    return steps.startIndex
+  }
+
+  var endIndex: Int {
+    return steps.endIndex
+  }
+
+  subscript(i: Int) -> Step<Problem> {
+    return steps[i]
+  }
+
+  func index(after i: Int) -> Int {
+    return steps.index(after: i)
   }
 }
