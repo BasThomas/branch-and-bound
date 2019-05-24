@@ -18,14 +18,19 @@ class Tests: XCTestCase {
     ]
   )
 
-  var videoBoard: Board = .init(
-    tiles: [
-      [1, 2, 3, 4],
-      [5, 6, -1, 8],
-      [9, 10, 7, 11],
-      [13, 14, 15, 12]
-    ]
-  )
+  var videoBoard: Board!
+
+  override func setUp() {
+    super.setUp()
+    videoBoard = .init(
+      tiles: [
+        [1, 2, 3, 4],
+        [5, 6, -1, 8],
+        [9, 10, 7, 11],
+        [13, 14, 15, 12]
+      ]
+    )
+  }
 
   func testNext() {
     videoBoard.next()
@@ -35,6 +40,14 @@ class Tests: XCTestCase {
       [9, 10, -1, 11],
       [13, 14, 15, 12]
     ]
-    XCTAssertEqual(board.currentBoard, nextBoard)
+    XCTAssertEqual(videoBoard.currentBoard, nextBoard)
+  }
+
+  func testSolve() {
+    let solution = videoBoard.solve()
+    XCTAssertEqual(videoBoard.currentBoard, Board.solved(rows: 4).currentBoard)
+    for step in solution {
+      print(step.step)
+    }
   }
 }

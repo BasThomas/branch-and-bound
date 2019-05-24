@@ -1,10 +1,7 @@
 import Foundation
 
-var five = Board(rows: 4)
-print(five)
+var board = Board(rows: 4)
 
-print(five.isSolved)
+board.shuffle(moves: 10)
 
-five.shuffle()
-
-print(five)
+let solution = board.solve()

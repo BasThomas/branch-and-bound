@@ -67,16 +67,40 @@ struct Board: CustomStringConvertible {
     self.rows = rows
   }
 
-  private var _previouNextTile: Tile = .empty
+
+  /// A board in its initial state.
+  ///
+  /// - Parameter rows: the amount of rows the board contains.
+  /// - Returns: a solved board; a board in its initial state.
+  static func solved(rows: Int) -> Board {
+    return .init(rows: rows)
+  }
+
+  private var _previousNextTile: Tile = .empty
   mutating func next() {
     let currentBoard = self.currentBoard
     let adjacentToEmpty = adjacentPositions(for: position(for: .empty))
-    print("##", adjacentToEmpty)
 
-    let boardOptions = adjacentToEmpty.map { position -> [[Tile]] in
-      move(tile: tile(at: position))
-      return currentBoard
-    }
+    let boardOptions = adjacentToEmpty.map { position -> (board: [[Tile]], moved: Tile, validPositions: Int) in
+      let tileToMove = tile(at: position)
+      move(tile: tileToMove)
+      defer { self.currentBoard = currentBoard }
+      return (self.currentBoard, tileToMove, validPositions)
+    }.filter { $0.moved != _previousNextTile }
+//    print(boardOptions.map { ($0.moved, $0.validPositions)})
+
+    let amountOfValidPositionsList = boardOptions.map { $0.validPositions }
+    let largestAmountOfValidPositions = amountOfValidPositionsList.max()
+    precondition(largestAmountOfValidPositions != nil, "No maximum valid positions found in \(boardOptions)")
+    let nextBestSteps = amountOfValidPositionsList.filter { $0 == largestAmountOfValidPositions }
+//    print("next best steps:", nextBestSteps)
+//    precondition(nextBestSteps.count == 1, "Should always have just one next best step, got \(nextBestSteps.count): \(nextBestSteps)")
+    let bestStepIndex = boardOptions.firstIndex { $0.validPositions == nextBestSteps.first }
+    precondition(bestStepIndex != nil, "Should always have an index for the next best step")
+
+    let bestOption = boardOptions[bestStepIndex!]
+    self.currentBoard = bestOption.board
+    _previousNextTile = bestOption.moved
   }
 
   private func position(
@@ -193,9 +217,13 @@ struct Board: CustomStringConvertible {
   }
 
   @discardableResult
-  func solve() -> Solution<Board> {
-    #warning("implement")
-    return .init()
+  mutating func solve() -> Solution<Board> {
+    var boards: [Board] = []
+    repeat {
+      next()
+      boards.append(self); print(self)
+    } while isSolved == false
+    return Solution(steps: boards.map(Solution.Step.init))
   }
 
   private var validPositions: Int {
